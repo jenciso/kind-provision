@@ -15,7 +15,6 @@ This repo contains the install instructions for create a Kubernetes cluster usin
 
 See the [INSTALL.md] document
 
-
 ## Notes
 
 Knowing issues:
