@@ -13,10 +13,12 @@ This repo contains the install instructions for create a Kubernetes cluster usin
 
 ## Getting Started
 
-See the [INSTALL.md] document and to deploy a demo application look at [examples](examples) directory.
+See the [INSTALL.md](INSTALL.md) file to provision a Kubernetes cluster.
+
+To deploy a demo application look at [examples](examples) directory.
 
 ## Notes
 
-Knowing issues:
+### Knowing issues:
 
 * To create a Kubernetes multinode is supported, but not recommended if you are using for long time. Consider using this multi-node only for dynamic creation. Kind has problem with the allocation ip address. See more information here: https://github.com/kubernetes-sigs/kind/issues/2045
