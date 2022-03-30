@@ -17,6 +17,8 @@ See the [INSTALL.md](INSTALL.md) file to provision a Kubernetes cluster.
 
 To deploy a demo application look at [examples](examples) directory.
 
+Finally, to destroy read the [UNINSTALL.md](UNINSTALL.md) documment.
+
 ## Notes
 
 ### Knowing issues:

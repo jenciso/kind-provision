@@ -2,11 +2,13 @@
 
 ## Pre-Install
 
-Create a new cluster file with the name of your cluster. Example: cluster "apps"
+To create a new cluster you need to create previously and `.env` file before. Take a look at `.env.sample` file
+
 ```
-vim cluster-apps.env
+cp .env.sample .env && vim .env
 ```
-Load the environment variables
+
+Load your environment variables modified
 ```
 . .env
 ```
