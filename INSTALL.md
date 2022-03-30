@@ -9,7 +9,6 @@ vim cluster-apps.env
 Load the environment variables
 ```
 . .env
-. cluster-apps.env
 ```
 
 ## Setup a cluster via Kind
