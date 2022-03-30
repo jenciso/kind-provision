@@ -79,7 +79,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --namespace ingress-nginx --create-namespace \
   --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
-  --set controller.extraArgs."--default-ssl-certificate"=cert-manager/cert-wildcard
+  --set controller.extraArgs."default-ssl-certificate"=cert-manager/cert-wildcard
 ```
 
 ### Kube replicator (Optional)
@@ -92,3 +92,31 @@ kubectl apply -f https://raw.githubusercontent.com/mittwald/kubernetes-replicato
 kubectl patch secret -n cert-manager cert-wildcard --type='json' \
   -p='[{"op": "add", "path": "/metadata/annotations/replicator.v1.mittwald.de~1replicate-to", "value":"*"}]'
 ```
+
+### Metrics server (Optional)
+
+```
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+helm upgrade --install metrics-server --namespace kube-system metrics-server/metrics-server \
+  --set args={--kubelet-insecure-tls}
+```
+
+### Kubernetes dashboard (Optional)
+
+Install 
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+```
+
+Create a user with privileges to enter the dashboard and proxy via kubectl
+```
+kubectl apply -f templates/kubernetes-dashboard-user.yaml && kubectl proxy
+```
+Get the user token 
+```
+kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
+```
+Open in your browser: 
+
+* http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
+
