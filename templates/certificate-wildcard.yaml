@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-${CLUSTER_NAME}
+  namespace: cert-manager
+spec:
+  secretName: cert-wildcard
+  issuerRef:
+    name: letsencrypt-prd-cloudflare
+    kind: ClusterIssuer
+  commonName: '*.${CLUSTER_NAME}.${SITE_DOMAIN}'
+  dnsNames:
+  - ${CLUSTER_NAME}.${SITE_DOMAIN}
+  - '*.${CLUSTER_NAME}.${SITE_DOMAIN}'
