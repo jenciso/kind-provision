@@ -13,7 +13,7 @@ This repo contains the install instructions for create a Kubernetes cluster usin
 
 ## Getting Started
 
-See the [INSTALL.md] document
+See the [INSTALL.md] document and to deploy a demo application look at [examples](examples) directory.
 
 ## Notes
 
