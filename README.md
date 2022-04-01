@@ -9,13 +9,14 @@ This repo contains the install instructions for create a Kubernetes cluster usin
 * Docker
 * Kind
 * Helm
-* Kubectl 
+* Kubectl
+* Cloudflare DNS domain
 
 ## Getting Started
 
-See the [INSTALL.md](INSTALL.md) file to provision a Kubernetes cluster.
+See the [INSTALL.md](INSTALL.md) file to provision a Kubernetes cluster. You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
 
-To deploy a demo application look at [examples](examples) directory.
+In the [examples](examples) directory you can find documments to provision different scenarios.
 
 Finally, to destroy read the [UNINSTALL.md](UNINSTALL.md) documment.
 
@@ -23,4 +24,4 @@ Finally, to destroy read the [UNINSTALL.md](UNINSTALL.md) documment.
 
 ### Knowing issues:
 
-* To create a Kubernetes multinode is supported, but not recommended if you are using for long time. Consider using this multi-node only for dynamic creation. Kind has problem with the allocation ip address. See more information here: https://github.com/kubernetes-sigs/kind/issues/2045
+* Multinode kubernetes is supported, but it is not recommended if you are using for long time. Consider use multi-node for dynamic/test environment only. It's known that Kind doesn't preserves the allocation ip address. See more information here: https://github.com/kubernetes-sigs/kind/issues/2045
