@@ -4,17 +4,7 @@
 
 ## Overview
 
-This repo contains the install instructions to create multiples Kubernetes cluster isolated using [Kind](https://kind.sigs.k8s.io/) and its experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK`.
-
-Also, you could also install the following components:
-
-* MeltaLB
-* Ingress Nginx
-* External-DNS
-* Cert-Manager
-* Kube-Replicator
-* Metrics Server
-* Kuberntes Dashboard
+This repo contains install instructions to create a multi cluster kubernetes environment. The ideia is to have multiple cluster isolated using [Kind](https://kind.sigs.k8s.io/) and creating their docker networks for each cluster. We are using the experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK`.
 
 ## Prerequisites
 
@@ -26,14 +16,22 @@ Also, you could also install the following components:
 
 ## Getting Started
 
-See the [INSTALL.md](INSTALL.md) file to provision a Kubernetes cluster. You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
+See the [INSTALL.md](INSTALL.md) file to provision a cluster with these components:
+
+* MeltaLB 
+* Ingress Nginx
+* External-DNS
+* Cert-Manager
+* Kube-Replicator
+* Metrics Server
+* Kuberntes Dashboard
+
+> You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
 
 In the [examples](examples) directory you can find documments to provision different scenarios.
 
-Finally, to destroy read the [UNINSTALL.md](UNINSTALL.md) documment.
+To destroy read the [UNINSTALL.md](UNINSTALL.md) file.
 
-## Notes
-
-### Knowing issues:
+## Knowing issues:
 
 * Multinode kubernetes is supported, but it is not recommended if you are using for long time. Consider use multi-node for dynamic/test environment only. It's known that Kind doesn't preserves the allocation ip address. See more information here: https://github.com/kubernetes-sigs/kind/issues/2045
