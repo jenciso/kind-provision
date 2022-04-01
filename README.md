@@ -2,7 +2,15 @@
 
 ## Overview
 
-This repo contains the install instructions for create a Kubernetes cluster using [Kind](https://kind.sigs.k8s.io/)
+This repo contains the install instructions for create a Kubernetes cluster using [Kind](https://kind.sigs.k8s.io/) with all theses components:
+
+* MeltaLB
+* Ingress Nginx
+* External-DNS
+* Cert-Manager
+* Kube-Replicator
+* Metrics Server
+* Kuberntes Dashboard
 
 ## Prerequisites
 
