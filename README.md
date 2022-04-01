@@ -4,7 +4,9 @@
 
 ## Overview
 
-This repo contains the install instructions for create a Kubernetes cluster using [Kind](https://kind.sigs.k8s.io/) with all theses components:
+This repo contains the install instructions to create multiples Kubernetes cluster isolated using [Kind](https://kind.sigs.k8s.io/) and its experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK`.
+
+Also, you could also install the following components:
 
 * MeltaLB
 * Ingress Nginx
