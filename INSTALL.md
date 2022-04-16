@@ -120,3 +120,28 @@ Open in your browser:
 
 * http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
 
+### Prometheus
+
+This operator creates metrics-server into `monitoring` namespace. So, if you installed before using helm, uninstall it first
+
+```
+helm delete metrics-server -n kube-system
+``` 
+
+
+Install [Prometheus Operator](https://prometheus-operator.dev/docs/prologue/quick-start/)
+
+```
+git clone https://github.com/prometheus-operator/kube-prometheus.git
+cd kube-prometheus
+kubectl create -f manifests/setup
+until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
+kubectl create -f manifests/
+```
+
+Ingress setup
+
+```
+envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
+```
+

@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: prometheus
+  namespace: monitoring
+spec:
+  rules:
+  - host: prometheus.${CLUSTER_NAME}.${SITE_DOMAIN}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: prometheus-k8s
+            port:
+              number: 9090
+  tls:
+  - hosts:
+    - prometheus.${CLUSTER_NAME}.${SITE_DOMAIN}
+    secretName: cert-wildcard
