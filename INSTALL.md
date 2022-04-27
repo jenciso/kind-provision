@@ -10,7 +10,7 @@ cp .env.sample .env && vim .env
 
 Load your environment variables modified
 ```
-. .env
+export $(cat .env | xargs)
 ```
 
 ## Setup a cluster via Kind
@@ -57,7 +57,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN}
 ```
 ```
-envsubst < templates/ingressClass.yaml | kubectl apply -f -
+envsubst < templates/ingressClass.yaml | kubectl create -f -
 ```
 
 ### CertManager
@@ -89,6 +89,8 @@ kubectl apply -f https://raw.githubusercontent.com/mittwald/kubernetes-replicato
 kubectl apply -f https://raw.githubusercontent.com/mittwald/kubernetes-replicator/master/deploy/deployment.yaml
 ```
 ```
+until kubectl get secret -n cert-manager cert-wildcard ; do echo  "Waiting for the secret ..."; sleep 3; done
+
 kubectl patch secret -n cert-manager cert-wildcard --type='json' \
   -p='[{"op": "add", "path": "/metadata/annotations/replicator.v1.mittwald.de~1replicate-to", "value":"*"}]'
 ```
@@ -132,16 +134,18 @@ helm delete metrics-server -n kube-system
 Install [Prometheus Operator](https://prometheus-operator.dev/docs/prologue/quick-start/)
 
 ```
-git clone https://github.com/prometheus-operator/kube-prometheus.git
-cd kube-prometheus
-kubectl create -f manifests/setup
+git clone https://github.com/prometheus-operator/kube-prometheus.git /tmp/prometheus
+cd /tmp/prometheus
+kubectl create -f /tmp/prometheus/manifests/setup
+kubectl create -f /tmp/prometheus/manifests/
 until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
-kubectl create -f manifests/
 ```
 
 Ingress setup
 
 ```
 envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
+envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
+envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
 ```
 
