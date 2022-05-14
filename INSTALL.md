@@ -60,6 +60,20 @@ helm upgrade --install ingress-nginx ingress-nginx \
 envsubst < templates/ingressClass.yaml | kubectl create -f -
 ```
 
+To enable metrics
+
+```
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
+  --set controller.metrics.enabled=true \
+  --set controller.metrics.serviceMonitor.enabled=true \
+  --set controller.metrics.serviceMonitor.additionalLabels.release="prometheus"
+```
+
+> Source: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#before-you-begin
+
 ### CertManager
 
 ```
@@ -124,21 +138,26 @@ Open in your browser:
 
 ### Prometheus
 
-This operator creates metrics-server into `monitoring` namespace. So, if you installed before using helm, uninstall it first
+This operator creates metrics-server into `prometheus` namespace. So, if you installed before using helm, uninstall it first
 
 ```
 helm delete metrics-server -n kube-system
 ``` 
-
-
-Install [Prometheus Operator](https://prometheus-operator.dev/docs/prologue/quick-start/)
+We gonna install [kube-prometheus-stack](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack)
 
 ```
-git clone https://github.com/prometheus-operator/kube-prometheus.git /tmp/prometheus
-cd /tmp/prometheus
-kubectl create -f /tmp/prometheus/manifests/setup
-kubectl create -f /tmp/prometheus/manifests/
-until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus --create-namespace --namespace prometheus prometheus-community/kube-prometheus-stack
+```
+
+To discover others ServiceMonitor in different namespace:
+
+```
+helm upgrade prometheus prometheus-community/kube-prometheus-stack \
+--namespace prometheus  \
+--set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
+--set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
 ```
 
 Ingress setup
@@ -148,4 +167,3 @@ envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
 envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
 envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
 ```
-

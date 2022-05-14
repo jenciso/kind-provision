@@ -5,7 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
   name: alertmanager
-  namespace: monitoring
+  namespace: prometheus
 spec:
   rules:
   - host: alertmanager.${CLUSTER_NAME}.${SITE_DOMAIN}
@@ -15,7 +15,7 @@ spec:
         path: /
         backend:
           service:
-            name: alertmanager-main
+            name: prometheus-kube-prometheus-alertmanager
             port:
               number: 9093
   tls:
