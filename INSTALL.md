@@ -29,6 +29,9 @@ Create a Kubernetes cluster
 kind create cluster --name $CLUSTER_NAME
 ```
 
+> Example to specify a kubernetes version, add this option: --image "kindest/node:v1.23.7"
+
+
 ## Configuration components
 
 ### MetalLB
@@ -59,20 +62,6 @@ helm upgrade --install ingress-nginx ingress-nginx \
 ```
 envsubst < templates/ingressClass.yaml | kubectl create -f -
 ```
-
-To enable metrics
-
-```
-helm upgrade --install ingress-nginx ingress-nginx \
-  --repo https://kubernetes.github.io/ingress-nginx \
-  --namespace ingress-nginx --create-namespace \
-  --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
-  --set controller.metrics.enabled=true \
-  --set controller.metrics.serviceMonitor.enabled=true \
-  --set controller.metrics.serviceMonitor.additionalLabels.release="prometheus"
-```
-
-> Source: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#before-you-begin
 
 ### CertManager
 
@@ -167,3 +156,18 @@ envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
 envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
 envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
 ```
+
+To enable metrics exporter in ingress-nginx 
+
+```
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
+  --set controller.extraArgs."default-ssl-certificate"=cert-manager/cert-wildcard \
+  --set controller.metrics.enabled=true \
+  --set controller.metrics.serviceMonitor.enabled=true \
+  --set controller.metrics.serviceMonitor.additionalLabels.release="prometheus"
+```
+
+> Source: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#before-you-begin
