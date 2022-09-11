@@ -10,6 +10,7 @@ cp .env.sample .env && vim .env
 
 Load your environment variables modified
 ```
+cat .env
 export $(cat .env | xargs)
 ```
 
@@ -23,13 +24,13 @@ docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUS
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
 ```
 
-Create a Kubernetes cluster 
+Create a Kubernetes cluster specifying a kuberntes version
 
 ```
 kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.23.10"
 ```
 
-## Configuration components
+## Setup and Configuration
 
 ### MetalLB
 
@@ -48,16 +49,15 @@ envsubst < templates/metallb-config.yaml | kubectl apply -f -
 envsubst < templates/external-dns.yaml | kubectl apply -f -
 ```
 
-### Ingress
+### Setup Ingress with nginx as default ingressClass
 
 ```
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --namespace ingress-nginx --create-namespace \
   --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN}
-```
-```
-envsubst < templates/ingressClass.yaml | kubectl create -f -
+
+kubectl annotate ingressClass nginx ingressclass.kubernetes.io/is-default-class=true
 ```
 
 ### CertManager
@@ -112,26 +112,34 @@ Install
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
 ```
 
-Create a user with privileges to enter the dashboard and proxy via kubectl
+Create a user with privileges to login cluster dashboard
 ```
-kubectl apply -f templates/kubernetes-dashboard-user.yaml && kubectl proxy
+kubectl apply -f templates/kubernetes-dashboard-user.yaml
 ```
-Get the user token 
+Get user token 
 ```
-kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
+kubectl -n kubernetes-dashboard get secret \
+  $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") \
+  -o go-template="{{.data.token | base64decode}}" | pbcopy
 ```
+
 Open in your browser: 
+
+```
+kube-proxy
+```
 
 * http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
 
 ### Prometheus
 
-This operator creates metrics-server into `prometheus` namespace. So, if you installed before using helm, uninstall it first
+This operator creates metrics-server into `prometheus` namespace. So, if you installed it before, uninstall it
 
 ```
 helm delete metrics-server -n kube-system
 ``` 
-We gonna install [kube-prometheus-stack](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack)
+
+We will use [kube-prometheus-stack](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack) to have a complete o11y stack
 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -148,7 +156,7 @@ helm upgrade prometheus prometheus-community/kube-prometheus-stack \
 --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
 ```
 
-Ingress setup
+Creating ingress entries:
 
 ```
 envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
@@ -156,7 +164,7 @@ envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
 envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
 ```
 
-To enable metrics exporter in ingress-nginx 
+To enable metrics exporter in ingress-nginx:
 
 ```
 helm upgrade --install ingress-nginx ingress-nginx \
