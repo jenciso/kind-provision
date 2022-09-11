@@ -19,18 +19,15 @@ export $(cat .env | xargs)
 Setup a custom network configuration
 ```
 export CLUSTER_GATEWAY=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".1"}')
-docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUSTER_NAME
+docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUSTER_NAME || echo "Already exist $CLUSTER_NETWORK network"
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
 ```
 
 Create a Kubernetes cluster 
 
 ```
-kind create cluster --name $CLUSTER_NAME
+kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.23.10"
 ```
-
-> Example to specify a kubernetes version, add this option: --image "kindest/node:v1.23.7"
-
 
 ## Configuration components
 
@@ -70,6 +67,8 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 ```
 ```
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f -
+kubectl wait -n cert-manager --for=condition=ready pod --selector=app.kubernetes.io/component=webhook --timeout=90s
+
 envsubst < templates/cluster-issuer.yaml | kubectl apply -f -
 envsubst < templates/certificate-wildcard.yaml | kubectl apply -f -
 ```
@@ -110,7 +109,7 @@ helm upgrade --install metrics-server --namespace kube-system metrics-server/met
 
 Install 
 ```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
 ```
 
 Create a user with privileges to enter the dashboard and proxy via kubectl
