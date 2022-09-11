@@ -63,7 +63,7 @@ envsubst < templates/ingressClass.yaml | kubectl create -f -
 ### CertManager
 
 ```
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 ```
 ```
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f -
