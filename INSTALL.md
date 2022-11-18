@@ -178,3 +178,12 @@ helm upgrade --install ingress-nginx ingress-nginx \
 ```
 
 > Source: https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#before-you-begin
+
+## Post Setup
+
+To avoid start automatically after a reboot, you can configure the following:
+
+```
+docker update --restart=no ${CLUSTER_NAME}-control-plane
+```
+> The default option is: `on-failure:1`
