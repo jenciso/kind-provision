@@ -24,14 +24,11 @@ See the [INSTALL.md](INSTALL.md) file to provision a cluster with these componen
 * Cert-Manager
 * Kube-Replicator
 * Metrics Server
-* Kuberntes Dashboard
+* Kubernetes Dashboard
+* Prometheus Stack
 
 > You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
 
 In the [examples](examples) directory you can find documments to provision different scenarios.
 
 To destroy read the [UNINSTALL.md](UNINSTALL.md) file.
-
-## Knowing issues:
-
-* Multinode kubernetes is supported, but it is not recommended if you are using for long time. Consider use multi-node for dynamic/test environment only. It's known that Kind doesn't preserves the allocation ip address. See more information here: https://github.com/kubernetes-sigs/kind/issues/2045

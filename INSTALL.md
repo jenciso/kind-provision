@@ -27,7 +27,7 @@ export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
 Create a Kubernetes cluster specifying a kuberntes version
 
 ```
-kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.23.10"
+kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.24.7"
 ```
 
 ## Setup and Configuration
@@ -38,8 +38,7 @@ kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.23.10"
 export METALLB_POOL_ADDR=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".200-"$1"."$2"."$3".250"}')
 ```
 ```
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 envsubst < templates/metallb-config.yaml | kubectl apply -f -
 ```
 
@@ -63,7 +62,7 @@ kubectl annotate ingressClass nginx ingressclass.kubernetes.io/is-default-class=
 ### CertManager
 
 ```
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
 ```
 ```
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f -
@@ -109,7 +108,7 @@ helm upgrade --install metrics-server --namespace kube-system metrics-server/met
 
 Install 
 ```
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.1/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 ```
 
 Create a user with privileges to login cluster dashboard
@@ -118,18 +117,9 @@ kubectl apply -f templates/kubernetes-dashboard-user.yaml
 ```
 Get user token 
 ```
-kubectl -n kubernetes-dashboard get secret \
-  $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") \
-  -o go-template="{{.data.token | base64decode}}" | pbcopy
+kubectl -n kubernetes-dashboard create token admin-user | pbcopy
 ```
-
-Open in your browser: 
-
-```
-kube-proxy
-```
-
-* http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
+`kube-proxy` and open in your browser: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
 
 ### Prometheus
 
