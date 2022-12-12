@@ -115,30 +115,25 @@ Create a user with privileges to login cluster dashboard
 ```
 kubectl apply -f templates/kubernetes-dashboard-user.yaml
 ```
-Get user token 
+Create a token for admin-user
 ```
 kubectl -n kubernetes-dashboard create token admin-user | pbcopy
 ```
-`kube-proxy` and open in your browser: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy
+Via `kubectl proxy` command, go [here](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy)
 
 ### Prometheus
 
 This operator creates metrics-server into `prometheus` namespace. So, if you installed it before, uninstall it
-
 ```
 helm delete metrics-server -n kube-system
 ``` 
-
 We will use [kube-prometheus-stack](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack) to have a complete o11y stack
-
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install prometheus --create-namespace --namespace prometheus prometheus-community/kube-prometheus-stack
 ```
-
 To discover others ServiceMonitor in different namespace:
-
 ```
 helm upgrade prometheus prometheus-community/kube-prometheus-stack \
 --namespace prometheus  \
@@ -171,8 +166,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
 
 ## Post Setup
 
-To avoid start automatically after a reboot, you can configure the following:
-
+To not auto-start after a reboot or computer start. Apply this:
 ```
 docker update --restart=no ${CLUSTER_NAME}-control-plane
 ```
