@@ -152,6 +152,7 @@ envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
 envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
 envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
 ```
+> Grafana default credentials are: admin / prom-operator
 
 To enable metrics exporter in ingress-nginx:
 
