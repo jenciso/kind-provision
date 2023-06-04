@@ -29,6 +29,8 @@ Create a Kubernetes cluster specifying a kuberntes version
 ```
 kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.24.7"
 ```
+> To create a cluster with 3 worker nodes:
+> `kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.24.7" --config ./kind-config.yaml`
 
 ## Setup and Configuration
 
@@ -39,7 +41,9 @@ export METALLB_POOL_ADDR=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2".
 ```
 ```
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
-envsubst < templates/metallb-config.yaml | kubectl apply -f -
+
+kubectl wait -n metallb-system --for=condition=ready pod --selector=app=metallb,component=controller --timeout=90s \
+  && envsubst < templates/metallb-config.yaml | kubectl apply -f -
 ```
 
 ### External DNS
@@ -66,10 +70,10 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 ```
 ```
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f -
-kubectl wait -n cert-manager --for=condition=ready pod --selector=app.kubernetes.io/component=webhook --timeout=90s
 
-envsubst < templates/cluster-issuer.yaml | kubectl apply -f -
-envsubst < templates/certificate-wildcard.yaml | kubectl apply -f -
+kubectl wait -n cert-manager --for=condition=ready pod --selector=app.kubernetes.io/component=webhook --timeout=90s \
+ && envsubst < templates/cluster-issuer.yaml | kubectl apply -f - \
+ && envsubst < templates/certificate-wildcard.yaml | kubectl apply -f -
 ```
 
 ### Update Ingress Nginx to use wildcard certificate 
