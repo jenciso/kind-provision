@@ -10,5 +10,4 @@ spec:
     kind: ClusterIssuer
   commonName: '*.${CLUSTER_NAME}.${SITE_DOMAIN}'
   dnsNames:
-  - ${CLUSTER_NAME}.${SITE_DOMAIN}
   - '*.${CLUSTER_NAME}.${SITE_DOMAIN}'
