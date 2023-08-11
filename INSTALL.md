@@ -141,7 +141,7 @@ To discover others ServiceMonitor in different namespace:
 ```
 helm upgrade prometheus prometheus-community/kube-prometheus-stack \
 --namespace prometheus  \
---set enableRemoteWriteReceiver=true \
+--set prometheus.prometheusSpec.enableRemoteWriteReceiver=true \
 --set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
 --set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false
 ```
