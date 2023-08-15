@@ -134,7 +134,7 @@ helm delete metrics-server -n kube-system
 We will use [kube-prometheus-stack](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack) to have a complete o11y stack
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
+helm repo update prometheus-community
 helm install prometheus --create-namespace --namespace prometheus prometheus-community/kube-prometheus-stack
 ```
 To discover others ServiceMonitor in different namespace:
