@@ -1,5 +1,6 @@
-### To add prometheus-stack only 
+### To add prometheus-stack only
 
+```shell
 export $(cat .env.cluster-local | xargs)
 
 envsubst < templates/external-dns.yaml | kubectl apply -f -
@@ -19,7 +20,7 @@ kubectl wait -n cert-manager --for=condition=ready pod --selector=app.kubernetes
  && envsubst < templates/cluster-issuer.yaml | kubectl apply -f - \
  && envsubst < templates/certificate-wildcard.yaml | kubectl apply -f -
 
- helm upgrade --install ingress-nginx ingress-nginx \
+helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --namespace ingress-nginx --create-namespace \
   --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
@@ -40,3 +41,4 @@ helm upgrade prometheus prometheus-community/kube-prometheus-stack \
 envsubst < templates/prometheus-ingress.yaml | kubectl apply -f -
 envsubst < templates/grafana-ingress.yaml | kubectl apply -f -
 envsubst < templates/alertmanager-ingress.yaml | kubectl apply -f -
+```
