@@ -40,7 +40,7 @@ kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION"
 export METALLB_POOL_ADDR=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".200-"$1"."$2"."$3".250"}')
 ```
 ```
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.11/config/manifests/metallb-native.yaml
 
 kubectl wait -n metallb-system --for=condition=ready pod --selector=app=metallb,component=controller --timeout=90s \
   && envsubst < templates/metallb-config.yaml | kubectl apply -f -
