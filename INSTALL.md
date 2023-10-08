@@ -27,10 +27,10 @@ export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
 Create a Kubernetes cluster specifying a kuberntes version
 
 ```
-kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.24.7"
+kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION"
 ```
 > To create a cluster with 3 worker nodes:
-> `kind create cluster --name $CLUSTER_NAME --image "kindest/node:v1.24.7" --config ./kind-config.yaml`
+> `kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --config ./kind-config.yaml`
 
 ## Setup and Configuration
 
