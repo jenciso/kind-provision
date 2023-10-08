@@ -2,11 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
   name: alertmanager
   namespace: prometheus
 spec:
+  ingressClassName: nginx
   rules:
   - host: alertmanager.${CLUSTER_NAME}.${SITE_DOMAIN}
     http:
