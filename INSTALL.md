@@ -66,7 +66,7 @@ kubectl annotate ingressClass nginx ingressclass.kubernetes.io/is-default-class=
 ### CertManager
 
 ```
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.yaml
 ```
 ```
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f -
