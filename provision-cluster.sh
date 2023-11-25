@@ -14,7 +14,10 @@ fi
 
 echo "Creating cluster"
 CLUSTER_GATEWAY=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".1"}')
-docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUSTER_NAME || echo "Already exist $CLUSTER_NETWORK network"
+(docker network list | grep -w $CLUSTER_NAME) && \
+  echo "Already exist $CLUSTER_NETWORK network. Please delete the network first" && exit 1
+
+docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUSTER_NAME
 echo "cluster_gateway=$CLUSTER_GATEWAY"
 echo "cluster_network=$CLUSTER_NETWORK"
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
@@ -39,6 +42,7 @@ kubectl annotate ingressClass nginx ingressclass.kubernetes.io/is-default-class=
 
 ### CertManager
 echo "Setting up cert-manager"
+export ID_DOMAIN=$(date | md5sum | head -c 5)
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.1/cert-manager.yaml
 envsubst < templates/secret-cloudflare.yaml | kubectl apply -f - --wait=true
 sleep 3
@@ -53,6 +57,11 @@ helm upgrade --install ingress-nginx ingress-nginx \
   --namespace ingress-nginx --create-namespace \
   --set controller.service.annotations."external-dns\.alpha\.kubernetes\.io/hostname"=*.${CLUSTER_NAME}.${SITE_DOMAIN} \
   --set controller.extraArgs."default-ssl-certificate"=cert-manager/cert-wildcard > /dev/null
+
+### Installing metrics-server
+helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+helm upgrade --install metrics-server --namespace kube-system metrics-server/metrics-server \
+  --set args={--kubelet-insecure-tls}
 
 ### Kubernetes dashboard (Optional)
 echo "Setting up dashboard"
