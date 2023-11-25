@@ -61,7 +61,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
 ### Installing metrics-server
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 helm upgrade --install metrics-server --namespace kube-system metrics-server/metrics-server \
-  --set args={--kubelet-insecure-tls}
+  --set args={--kubelet-insecure-tls} > /dev/null
 
 ### Kubernetes dashboard (Optional)
 echo "Setting up dashboard"
