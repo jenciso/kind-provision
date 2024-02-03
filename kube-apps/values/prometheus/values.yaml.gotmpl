@@ -1,0 +1,40 @@
+prometheus:
+  ingress:
+    enabled: true
+    paths:
+      - /
+    pathType: Prefix
+    hosts:
+      - prometheus.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+    tls:
+      - hosts:
+          - prometheus.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+        secretName: cert-wildcard
+  prometheusSpec:
+    enableRemoteWriteReceiver: true
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+grafana:
+  ingress:
+    enabled: true
+    paths:
+      - /
+    pathType: Prefix
+    hosts:
+      - grafana.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+    tls:
+      - hosts:
+          - grafana.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+        secretName: cert-wildcard
+alertmanager:
+  ingress:
+    enabled: true
+    paths:
+      - /
+    pathType: Prefix
+    hosts:
+      - alertmanager.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+    tls:
+      - hosts:
+          - alertmanager.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}
+        secretName: cert-wildcard

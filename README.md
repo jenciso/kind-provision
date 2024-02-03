@@ -11,6 +11,7 @@ This repo contains install instructions to create a multi cluster kubernetes env
 * Docker
 * Kind
 * Helm
+* Helmfile
 * Kubectl
 * Cloudflare DNS domain
 
@@ -29,6 +30,95 @@ See the [INSTALL.md](INSTALL.md) file to provision a cluster with these componen
 
 > You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
 
-In the [examples](examples) directory you can find documments to provision different scenarios.
-
 To destroy read the [UNINSTALL.md](UNINSTALL.md) file.
+
+-----
+
+## Additional Notes
+
+### Running a nginx-demo application
+
+Creating a namespace "demos"
+```
+kubectl create ns demos
+kubectl create deployment -n demos --image=nginx nginx-demo
+kubectl create service -n demos clusterip nginx-demo --tcp=80:80
+```
+
+Creating an ingress resource and request a certificate
+```
+cat << EOF > /tmp/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: letsencrypt-prd-cloudflare
+  name: nginx-demo
+  namespace: demos
+spec:
+  rules:
+  - host: nginx-demo.${CLUSTER_NAME}.${SITE_DOMAIN}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nginx-demo
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - nginx-demo.${CLUSTER_NAME}.${SITE_DOMAIN}
+    secretName: nginx-demo-cert
+EOF
+```
+
+Using a wildcard certificate
+```
+cat << EOF > /tmp/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  name: nginx-demo
+  namespace: demos
+spec:
+  rules:
+  - host: nginx-demo.${CLUSTER_NAME}.${SITE_DOMAIN}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: nginx-demo
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - nginx-demo.${CLUSTER_NAME}.${SITE_DOMAIN}
+    secretName: cert-wildcard
+EOF
+```
+
+Applying manifest
+
+```
+kubectl apply -f /tmp/ingress.yaml
+```
+
+### Issues
+
+https://github.com/kubernetes-sigs/kind/issues/2045
+
+
+## References
+
+Kubernetes Dashboard:
+* https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
+
+Kind Plugins
+* https://github.com/aojea/kind-networking-plugins

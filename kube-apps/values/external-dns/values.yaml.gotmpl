@@ -1,0 +1,8 @@
+provider: cloudflare
+extraArgs:
+  - --domain-filter={{ requiredEnv "SITE_DOMAIN" }}
+env:
+  - name: CF_API_KEY
+    value: {{ requiredEnv "CF_API_KEY" }}
+  - name: CF_API_EMAIL
+    value: {{ requiredEnv "CF_API_EMAIL" }}
