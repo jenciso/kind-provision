@@ -84,8 +84,14 @@ releases:
     version: 56.6.1
     namespace: prometheus
     installed: true
-    disableValidation: true
     needs:
       - ingress-nginx/ingress-nginx
     values:
+      - cdrs:
+          enabled: false
       - values/prometheus/values.yaml.gotmpl
+    hooks:
+      - events:
+        - prepare
+        showlogs: true
+        command: "./scripts/prometheus/install-crds.sh"
