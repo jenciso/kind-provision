@@ -1,0 +1,8 @@
+controller:
+  ingressClassResource:
+    default: true
+  service:
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: '*.{{ requiredEnv "CLUSTER_NAME" }}.{{ requiredEnv "SITE_DOMAIN" }}'
+  extraArgs:
+    default-ssl-certificate: cert-manager/cert-wildcard
