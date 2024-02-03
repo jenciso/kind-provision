@@ -1,0 +1,13 @@
+---
+repositories:
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: prometheus-adapter
+    chart: prometheus-community/prometheus-adapter
+    version: 4.9.0
+    namespace: prometheus
+    installed: true
+    values:
+      - values/prometheus-adapter/common.yaml

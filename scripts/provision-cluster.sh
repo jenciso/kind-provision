@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ## Reading the .env file with configuration settings
-if test -f ".env" ; then
+if test -f "./.env" ; then
     echo "Exporting variables from configuration file"
     set -o allexport
-    source .env
+    source ./.env
     set +o allexport
 else
     echo "Error exporting env vars"

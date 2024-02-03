@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if test -f ".env" ; then
+if test -f "./.env" ; then
     echo "Exporting variables from configuration file"
     set -o allexport
-    source .env
+    source ./.env
     set +o allexport
 else
     echo "Error exporting env vars"
@@ -13,5 +13,6 @@ fi
 echo "Configuring metallb"
 export METALLB_POOL_ADDR=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".200-"$1"."$2"."$3".250"}')
 
-cd kube-apps
+## Install Core Applications
+cd kube-apps/core-apps
 helmfile apply

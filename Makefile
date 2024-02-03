@@ -1,10 +1,11 @@
 provision:
-	./provision.sh
+	./scripts/provision-cluster.sh
+	./scripts/provision-coreapps.sh
 
 setup:
-	./setup.sh
+	./scripts/setup.sh
 
 install: provision setup
 	
 destroy:
-	./destroy.sh
+	./scripts/destroy.sh
