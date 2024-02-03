@@ -19,7 +19,7 @@ docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUS
 echo "cluster_gateway=$CLUSTER_GATEWAY"
 echo "cluster_network=$CLUSTER_NETWORK"
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
-kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=30s
+kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=30s --config=scripts/kind-config.yaml
 
 ## Disabling cluster to auto-start
 docker update --restart=no ${CLUSTER_NAME}-control-plane

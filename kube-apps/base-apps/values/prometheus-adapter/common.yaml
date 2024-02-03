@@ -1,7 +1,7 @@
 prometheus:
   url: http://prometheus-kube-prometheus-prometheus.prometheus.svc
 
-replicas: 3
+replicas: 1
 
 resources:
   requests:

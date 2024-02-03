@@ -1,5 +1,7 @@
 ---
 repositories:
+  - name: cilium
+    url: https://helm.cilium.io
   - name: metallb
     url: https://metallb.github.io/metallb
   - name: external-dns
@@ -17,6 +19,20 @@ repositories:
 
 
 releases:
+  - name: cilium
+    chart: cilium/cilium
+    version: 1.15.0
+    namespace: cilium-system
+    installed: true
+    values:
+      - ipam:
+          mode: kubernetes
+      - hubble:
+          relay:
+            enabled: true
+          ui:
+            enabled: true
+
   - name: metrics-server
     chart: metrics-server/metrics-server
     version: 3.11.0
@@ -31,6 +47,8 @@ releases:
     version: 0.13.12
     namespace: metallb-system
     installed: true
+    needs:
+      - cilium-system/cilium
     hooks:
       - events:
         - postsync
