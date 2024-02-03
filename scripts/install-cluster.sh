@@ -3,12 +3,9 @@
 ## Reading the .env file with configuration settings
 if test -f "./.env" ; then
     echo "Exporting variables from configuration file"
-    set -o allexport
-    source ./.env
-    set +o allexport
+    set -o allexport; source ./.env; set +o allexport
 else
-    echo "Error exporting env vars"
-    exit 1
+    echo "Error exporting env vars"; exit 1
 fi
 
 
