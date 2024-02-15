@@ -1,13 +1,5 @@
-# three node (two workers) cluster config
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-networking:
-  disableDefaultCNI: true
-  serviceSubnet: 10.96.0.0/16
-  podSubnet: 10.244.0.0/16
-nodes:
-- role: control-plane
-- role: worker
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry]
