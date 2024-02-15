@@ -1,7 +1,14 @@
 ---
+environments:
+  default:
+    values:
+      - cni: {{ env "CUSTOM_CNI" | default "calico" }}
+---
 repositories:
   - name: cilium
     url: https://helm.cilium.io
+  - name: projectcalico
+    url: https://docs.tigera.io/calico/charts
   - name: metallb
     url: https://metallb.github.io/metallb
   - name: external-dns
@@ -19,11 +26,13 @@ repositories:
 
 
 releases:
+{{ if eq .Environment.Values.cni "cilium" }}
   - name: cilium
     chart: cilium/cilium
     version: 1.15.0
     namespace: cilium-system
-    installed: true
+    installed: {{ env "CUSTOM_CNI_ENABLED" | default false }}
+    wait: true
     values:
       - ipam:
           mode: kubernetes
@@ -32,6 +41,32 @@ releases:
             enabled: true
           ui:
             enabled: true
+{{ end }}
+
+{{ if eq .Environment.Values.cni "calico" }}
+  - name: projectcalico
+    chart: projectcalico/tigera-operator
+    version: v3.27.0
+    namespace: tigera-operator
+    installed: {{ env "CUSTOM_CNI_ENABLED" | default false }}
+    wait: true
+    disableValidationOnInstall: true
+    values:
+      - installation:
+          cni:
+            type: Calico
+          calicoNetwork:
+            bgp: Disabled
+            ipPools:
+            - cidr: 10.244.0.0/16
+              encapsulation: VXLAN
+    hooks:
+      - events:
+        - postsync
+        showlogs: true
+        command: "./scripts/calico/calico.sh"
+
+{{ end }}
 
   - name: metrics-server
     chart: metrics-server/metrics-server
@@ -47,8 +82,6 @@ releases:
     version: 0.13.12
     namespace: metallb-system
     installed: true
-    needs:
-      - cilium-system/cilium
     hooks:
       - events:
         - postsync
@@ -101,7 +134,7 @@ releases:
     chart: prometheus-community/kube-prometheus-stack
     version: 56.6.1
     namespace: prometheus
-    installed: true
+    installed: {{ env "PROMETHEUS_STACK_ENABLED" | default false }}
     needs:
       - ingress-nginx/ingress-nginx
     values:

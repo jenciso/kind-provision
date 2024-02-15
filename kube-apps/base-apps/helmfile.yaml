@@ -8,6 +8,6 @@ releases:
     chart: prometheus-community/prometheus-adapter
     version: 4.9.0
     namespace: prometheus
-    installed: true
+    installed: {{ env "PROMETHEUS_STACK_ENABLED" | default false }}
     values:
       - values/prometheus-adapter/common.yaml
