@@ -1,10 +1,13 @@
 # Kubernetes local provision with Kind
 
+![](https://i.octopus.com/blog/2020-01/kubernetes-with-kind/kubernetes-in-docker.png)
+
 ## Overview
 
 This repo contains all the needed to create a kubernetes cluster with kind. 
 
-It has support to run a multi cluster environment, we are using the experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK` to isolate the clusters.
+It supports multi cluster environment provision. It use the experimental kind feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK` 
+to create different network by cluster.
 
 ## Prerequisites
 
@@ -40,6 +43,7 @@ To provision
 ```shell
 make provision
 ```
+> It is divided in two stages: `make install` and `make setup`
 
 To destroy
 ```shell
