@@ -8,5 +8,4 @@ until kubectl wait -n metallb-system --for=condition=ready pod --selector=app.ku
   do echo "Waiting for metallb controller..."; sleep 2
 done
 
-kubectl wait -n metallb-system --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s \
-  && envsubst < ./scripts/metallb/metallb-config.yaml | kubectl apply -f -
+envsubst < ./scripts/metallb/metallb-config.yaml | kubectl apply -f -
