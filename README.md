@@ -1,10 +1,10 @@
-# CREATE A KUBERNTES POC ENVIRONMENT
-
-![](https://d33wubrfki0l68.cloudfront.net/d0c94836ab5b896f29728f3c4798054539303799/9f948/logo/logo.png)
+# Kubernetes local provision with Kind
 
 ## Overview
 
-This repo contains install instructions to create a multi cluster kubernetes environment. The ideia is to have multiple cluster isolated using [Kind](https://kind.sigs.k8s.io/) and creating their docker networks for each cluster. We are using the experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK`.
+This repo contains all the needed to create a kubernetes cluster with kind. 
+
+It has support to run a multi cluster environment, we are using the experimental feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK` to isolate the clusters.
 
 ## Prerequisites
 
@@ -13,28 +13,42 @@ This repo contains install instructions to create a multi cluster kubernetes env
 * Helm
 * Helmfile
 * Kubectl
-* Cloudflare DNS domain
+* Cloudflare Account with a custom domain configured
+> You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
+
 
 ## Getting Started
 
-See the [INSTALL.md](INSTALL.md) file to provision a cluster with these components:
+Create a `.env` file similar to `.env.sample`
 
-* MeltaLB 
-* Ingress Nginx
-* External-DNS
-* Cert-Manager
-* Kube-Replicator
-* Metrics Server
-* Kubernetes Dashboard
-* Prometheus Stack
+Directories and files:
 
-> You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
+```shell
+➜ tree -d -L 2
+.
+├── kube-apps
+│   ├── base-apps
+│   └── core-apps
+└── scripts
+```
 
-To destroy read the [UNINSTALL.md](UNINSTALL.md) file.
+In the `core-apps` directory is a helmfile declaring the core applications to be installed. The same happens with `base-apps`
+The `scripts.sh` has the scripts used in the `Makefile`
+
+
+To provision
+```
+make provision
+``` 
+
+To destroy
+```
+make destroy
+```
 
 -----
 
-## Additional Notes
+## Using the cluster
 
 ### Running a nginx-demo application
 
@@ -109,16 +123,3 @@ Applying manifest
 ```
 kubectl apply -f /tmp/ingress.yaml
 ```
-
-### Issues
-
-https://github.com/kubernetes-sigs/kind/issues/2045
-
-
-## References
-
-Kubernetes Dashboard:
-* https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md
-
-Kind Plugins
-* https://github.com/aojea/kind-networking-plugins
