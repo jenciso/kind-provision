@@ -11,10 +11,13 @@ echo "cluster_gateway=$CLUSTER_GATEWAY"
 echo "cluster_network=$CLUSTER_NETWORK"
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$CLUSTER_NAME
 
-if [ "${CUSTOM_CNI_ENABLED}" = true ]; then
-  kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=30s --config=scripts/kind-config_custom-cni.yaml
+if [ "${CUSTOM_CNI}" != "kind" ]; then
+  KIND_CONFIG_FILE=kind-config_custom-cni.yaml
 else
-  kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=30s --config=scripts/kind-config.yaml
+  KIND_CONFIG_FILE=kind-config.yaml
 fi
+
+kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=30s --config=scripts/${KIND_CONFIG_FILE}
+
 ## Disabling cluster to auto-start
 docker update --restart=no ${CLUSTER_NAME}-control-plane
