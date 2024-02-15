@@ -37,12 +37,12 @@ The `scripts.sh` has the scripts used in the `Makefile`
 
 
 To provision
-```
+```shell
 make provision
-``` 
+```
 
 To destroy
-```
+```shell
 make destroy
 ```
 
@@ -53,14 +53,14 @@ make destroy
 ### Running a nginx-demo application
 
 Creating a namespace "demos"
-```
+```shell
 kubectl create ns demos
 kubectl create deployment -n demos --image=nginx nginx-demo
 kubectl create service -n demos clusterip nginx-demo --tcp=80:80
 ```
 
 Creating an ingress resource and request a certificate
-```
+```shell
 cat << EOF > /tmp/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -90,7 +90,7 @@ EOF
 ```
 
 Using a wildcard certificate
-```
+```shell
 cat << EOF > /tmp/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -120,6 +120,6 @@ EOF
 
 Applying manifest
 
-```
+```shell
 kubectl apply -f /tmp/ingress.yaml
 ```
