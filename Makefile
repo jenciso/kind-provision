@@ -16,6 +16,9 @@ setup:
 	./scripts/setup-coreapps.sh
 	./scripts/setup-baseapps.sh
 
+uninstall:
+	./scripts/uninstall.sh
+
 provision: install setup
 	
 destroy:

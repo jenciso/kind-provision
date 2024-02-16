@@ -5,10 +5,14 @@ environments:
       - cni: {{ env "CUSTOM_CNI" | default "kind" }}
 ---
 repositories:
+{{ if eq .Environment.Values.cni "cilium" }}
   - name: cilium
     url: https://helm.cilium.io
+{{ end }}
+{{ if eq .Environment.Values.cni "calico" }}
   - name: projectcalico
     url: https://docs.tigera.io/calico/charts
+{{ end }}
   - name: metallb
     url: https://metallb.github.io/metallb
   - name: external-dns
