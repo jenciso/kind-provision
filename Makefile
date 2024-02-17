@@ -23,3 +23,9 @@ provision: install setup
 	
 destroy:
 	./scripts/destroy-cluster.sh
+
+start-cluster:
+	./scripts/start-cluster.sh
+
+stop-cluster:
+	./scripts/stop-cluster.sh

@@ -1,8 +1,11 @@
 #!/bin/bash
 
-set -x
+if [[ ${DEBUG} = true ]]; then
+  set -x
+fi
 
 ## Provisioning cluster 
+
 echo "Creating cluster"
 CLUSTER_GATEWAY=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".1"}')
 (docker network list | grep -w $CLUSTER_NAME) && \
@@ -21,5 +24,9 @@ fi
 
 kind create cluster --name $CLUSTER_NAME --image "kindest/node:v$KUBE_VERSION" --wait=60s --config=scripts/${KIND_CONFIG_FILE}
 
-## Disabling cluster to auto-start
-docker update --restart=no ${CLUSTER_NAME}-control-plane
+## Post-install
+
+### Disabling cluster to auto-start
+for DOCKER_ID in $(docker ps -a --no-trunc --filter name=^${CLUSTER_NAME}- -q); do
+  docker update --restart=no $DOCKER_ID
+done
