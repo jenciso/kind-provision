@@ -1,13 +1,13 @@
 include .env
 export
 
-install: install-cluster install-registry install-registry-proxy
+install: install-cluster install-local-registry install-registry-proxy
 
 install-cluster:
 	./scripts/install-cluster.sh
 
-install-registry:
-	./scripts/kind-registry.sh
+install-local-registry:
+	./scripts/local-registry.sh
 
 install-registry-proxy:
 	./scripts/registry-proxy.sh

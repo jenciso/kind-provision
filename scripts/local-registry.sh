@@ -1,4 +1,14 @@
 #!/bin/sh
+
+if [ ${LOCAL_REGISTRY_DISABLED} = true ]; then
+  echo "Local registry is disabled"
+  exit 0
+fi
+
+if [ ${DEBUG} = true ]; then
+  set -x
+fi
+
 set -o errexit
 
 # Create registry container unless it already exists
