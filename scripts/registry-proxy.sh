@@ -30,7 +30,7 @@ if [ "${running}" != 'true' ]; then
        -v ${CLUSTER_NAME}_docker_mirror_certs:/ca \
        -e ENABLE_MANIFEST_CACHE=true \
        -e DISABLE_IPV6=true \
-       -e REGISTRIES="k8s.gcr.io gcr.io quay.io" \
+       -e REGISTRIES="docker.io registry.k8s.io k8s.gcr.io gcr.io quay.io" \
        -e AUTH_REGISTRIES="${DOCKER_REGISTRY}:${DOCKER_USERNAME}:${DOCKER_PASSWORD}" \
        jenciso/registry-proxy
 fi
@@ -39,7 +39,7 @@ SETUP_URL=http://${REGISTRY_NAME}:3128/setup/systemd
 pids=""
 for NODE in $(kind get nodes --name "$CLUSTER_NAME"); do
   docker exec "$NODE" sh -c "\
-      curl --retry 12 --retry-all-errors $SETUP_URL \
+      curl -s --retry 10 --retry-all-errors $SETUP_URL \
       | sed s/docker\.service/containerd\.service/g \
       | sed '/Environment/ s/$/ \"NO_PROXY=127.0.0.0\/8,10.0.0.0\/8,172.16.0.0\/12,192.168.0.0\/16\"/' \
       | bash" & pids="$pids $!" # Configure every node in background
