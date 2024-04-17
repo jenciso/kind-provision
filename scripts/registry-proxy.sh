@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [ ${REGISTRY_PROXY_DISABLED} = true ]; then
+if [ "${REGISTRY_PROXY_DISABLED}" = "true" ]; then
   echo "Registry proxy is disabled"
   exit 0
 fi
 
-if [ ${DEBUG} = true ]; then
+if [ "${DEBUG}" = "true" ]; then
   set -x
 fi
 

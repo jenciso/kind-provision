@@ -1,11 +1,11 @@
 #!/bin/sh
 
-if [ ${LOCAL_REGISTRY_DISABLED} = true ]; then
+if [ "${LOCAL_REGISTRY_DISABLED}" = "true" ]; then
   echo "Local registry is disabled"
   exit 0
 fi
 
-if [ ${DEBUG} = true ]; then
+if [ "${DEBUG}" = "true" ]; then
   set -x
 fi
 
