@@ -30,7 +30,7 @@ Directories and files:
 ➜ tree -d -L 2
 .
 ├── kube-apps
-│   ├── base-apps
+│   ├── common-apps
 │   └── core-apps
 └── scripts
 ```

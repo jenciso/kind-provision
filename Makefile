@@ -14,7 +14,7 @@ install-registry-proxy:
 
 setup:
 	./scripts/setup-coreapps.sh
-	./scripts/setup-baseapps.sh
+	./scripts/setup-commonapps.sh
 
 uninstall:
 	./scripts/uninstall.sh

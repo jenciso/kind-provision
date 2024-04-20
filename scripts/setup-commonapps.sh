@@ -5,5 +5,5 @@ if [[ ${DEBUG} = true ]]; then
 fi
 
 ## Install applications
-cd kube-apps/base-apps
+cd kube-apps/common-apps
 helmfile apply
