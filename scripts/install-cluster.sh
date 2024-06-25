@@ -4,11 +4,12 @@ if [[ ${DEBUG} = true ]]; then
   set -x
 fi
 
-## Provisioning cluster 
+## Provisioning cluster
 
 echo "Creating cluster"
+
 CLUSTER_GATEWAY=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".1"}')
-(docker network list | grep -w $CLUSTER_NAME) && \
+(docker network list --format {{.Name}} | grep -w $CLUSTER_NAME) && \
   echo "Network $CLUSTER_NETWORK already exists" && exit 1
 
 docker network create --subnet $CLUSTER_NETWORK --gateway $CLUSTER_GATEWAY $CLUSTER_NAME
