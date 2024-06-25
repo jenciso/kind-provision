@@ -4,21 +4,20 @@
 
 ## Overview
 
-This repo contains all the needed to create a kubernetes cluster with kind. 
+This repo contains all the needed to create a kubernetes cluster with kind.
 
-It supports multi cluster environment provision. It use the experimental kind feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK` 
+It supports multi cluster environment provision. It use the experimental kind feature: `KIND_EXPERIMENTAL_DOCKER_NETWORK`
 to create different network by cluster.
 
 ## Prerequisites
 
-* Docker
-* Kind
-* Helm
-* Helmfile
-* Kubectl
-* Cloudflare Account with a custom domain configured
-> You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
-
+- Docker
+- Kind
+- Helm
+- Helmfile
+- Kubectl
+- Cloudflare Account with a custom domain configured
+  > You need to have a cloudflare domain and get your API token to manage your DNS domain via Cloudflare API.
 
 ## Getting Started
 
@@ -38,25 +37,28 @@ Directories and files:
 In the `core-apps` directory is a helmfile declaring the core applications to be installed. The same happens with `base-apps`
 The `scripts.sh` has the scripts used in the `Makefile`
 
-
 To provision
+
 ```shell
 make provision
 ```
+
 > It is divided in two stages: `make install` and `make setup`
 
 To destroy
+
 ```shell
 make destroy
 ```
 
------
+---
 
 ## Using the cluster
 
 ### Running a nginx-demo application
 
 Creating a namespace "demos"
+
 ```shell
 kubectl create ns demos
 kubectl create deployment -n demos --image=nginx nginx-demo
@@ -64,6 +66,7 @@ kubectl create service -n demos clusterip nginx-demo --tcp=80:80
 ```
 
 Creating an ingress resource and request a certificate
+
 ```shell
 cat << EOF > /tmp/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -94,6 +97,7 @@ EOF
 ```
 
 Using a wildcard certificate
+
 ```shell
 cat << EOF > /tmp/ingress.yaml
 apiVersion: networking.k8s.io/v1
