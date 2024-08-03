@@ -2,11 +2,12 @@
 
 ## Uninstall Applications
 
-export METALLB_POOL_ADDR=$(echo $CLUSTER_NETWORK | awk -F '.' '{ print $1"."$2"."$3".200-"$1"."$2"."$3".250"}')
-DIR=$PWD
+POOL=$(echo "$CLUSTER_NETWORK" | awk -F '.' '{ print $1"."$2"."$3".200-"$1"."$2"."$3".250"}')
+export METALLB_POOL_ADDR="$POOL"
 
-cd $DIR/kube-apps/common-apps
+DIR=$PWD
+cd "$DIR/kube-apps/common-apps" || exit
 helmfile destroy
 
-cd $DIR/kube-apps/core-apps
+cd "$DIR/kube-apps/core-apps" || exit
 helmfile destroy
