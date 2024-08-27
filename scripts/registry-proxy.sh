@@ -44,4 +44,4 @@ for NODE in $(kind get nodes --name "$CLUSTER_NAME"); do
       | sed '/Environment/ s/$/ \"NO_PROXY=127.0.0.0\/8,10.0.0.0\/8,172.16.0.0\/12,192.168.0.0\/16\"/' \
       | bash" & pids="$pids $!" # Configure every node in background
 done
-wait "$pids" # Wait for all configurations to end
+wait $pids # Wait for all configurations to end
