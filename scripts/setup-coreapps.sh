@@ -10,4 +10,4 @@ export METALLB_POOL_ADDR=$POOL
 
 ## Install Core Applications
 cd kube-apps/core-apps || exit
-helmfile apply
+helmfile sync

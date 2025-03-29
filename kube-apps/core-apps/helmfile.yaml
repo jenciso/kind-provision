@@ -135,17 +135,10 @@ releases:
 
   - name: prometheus
     chart: prometheus-community/kube-prometheus-stack
-    version: 58.2.0
+    version: 70.3.0
     namespace: prometheus
     installed: {{ env "PROMETHEUS_STACK_ENABLED" | default false }}
     needs:
       - ingress-nginx/ingress-nginx
     values:
-      - cdrs:
-          enabled: false
       - values/prometheus/values.yaml.gotmpl
-    hooks:
-      - events:
-        - prepare
-        showlogs: true
-        command: "./scripts/prometheus/install-crds.sh"

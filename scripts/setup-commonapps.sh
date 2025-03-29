@@ -6,4 +6,4 @@ fi
 
 ## Install applications
 cd kube-apps/common-apps || exit
-helmfile apply
+helmfile sync
